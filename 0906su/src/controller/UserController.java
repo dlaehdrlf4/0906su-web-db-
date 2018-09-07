@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
+
 import service.UserService;
 import service.UserServiceImpl;
 import vo.FMember;
@@ -38,8 +40,11 @@ public class UserController extends HttpServlet {
 			//url 제대로 처리하지 못하는 것입니다.
 			//form에서 전송할 때 사용할 URL과 Sevlet이 처리하는 URL이 같은지 확인
 			System.out.println(command);
+			RequestDispatcher dispatcher = null;
 			switch(command) {
 			case  "user/login":
+				// 이 문장이 안나오면 링크 확인
+				System.out.println("회원가입 처리");
 				//서비스 메소드 호출
 				FMember user = userService.login(request);
 				//로그인 실패한 경우
@@ -65,8 +70,36 @@ public class UserController extends HttpServlet {
 			case "user/register":
 				//단순 페이지 이동
 				//"../디렉토리/페이지이름"
-					RequestDispatcher dispatcher = request.getRequestDispatcher( "../member/register.jsp");
+					dispatcher = request.getRequestDispatcher( "../member/register.jsp");
 					dispatcher.forward(request, response);
+					break;
+			case "user/insert":
+				boolean r = userService.registerMember(request);
+				if(r == true) {
+					//회원가입에 성공했을 때 처리
+					session.setAttribute("msg", "가입에 성공하셨습니다.");
+					response.sendRedirect("../");
+				}else {
+					session.setAttribute("registermsg", "회원 가입에 실패하셨습니다." );
+					response.sendRedirect("/register");
+					//회원가입에 실패했을 때 처리
+				}
+					break;
+			case "user/emailcheck":
+				//어떤일을 하면 무조건 서비스를 불러라
+				boolean result = userService.emailCheck(request);
+				//json으로 출력할 때는 리턴받은 데이터를 바로 저장하지 말고
+				//JSON 객체로 변환해서 저장
+				JSONObject obj = new JSONObject();
+				obj.put("result", result);
+				
+				// 데이터를 저장
+				request.setAttribute("result", obj); // obj는 키를 줘서 넣어준거고 그냥 result는 키를 말고 값을 주었다.
+				//결과페이지로 포워딩 - 리다이렉트로 가능 /만 쓰면 webcontent부터 간다.
+				dispatcher = request.getRequestDispatcher("/member/emailcheck.jsp");
+				dispatcher.forward(request, response);
+						
+				
 					break;
 			}
 			

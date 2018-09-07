@@ -9,4 +9,8 @@ import vo.FMember;
 public interface UserService {
  // 로그인을 처리하는 메소드
 	public FMember login(HttpServletRequest request);
+	//회원가입을 처리하는 메소드
+	public boolean registerMember(HttpServletRequest request);
+	//이메일 중복 체크를 위한 메소드
+	public boolean emailCheck(HttpServletRequest request);
 }

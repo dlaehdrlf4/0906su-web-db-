@@ -47,5 +47,49 @@ public class UserServiceImpl implements UserService {
 			//dao에 있는 것을 서비스로 가져왔다 그리고 여기서 controller로 이동한다.
 				
 		}
+		@Override
+		public boolean registerMember(HttpServletRequest request) {
+			System.out.println("서비스 도착");
+			boolean result = false;
+			// 파라미터 읽기
+			try {
+				request.setCharacterEncoding("utf-8");
+			}	
+			catch(Exception e) {
+				e.printStackTrace();
+			}
+			String email = request.getParameter("email");
+			String pw = request.getParameter("pw");
+			String name = request.getParameter("name");
+			String phone = request.getParameter("phone");
+			String address = request.getParameter("address");
+			String age = request.getParameter("age");
+			String selfintro = request.getParameter("selfintro");
+			System.out.println("email:" + email);
+			System.out.println("pw:" + pw);
+			
+			//Dao 메소드의 파라미터만들기
+			FMember member = new FMember();
+			member.setEmail(email);
+			member.setPw(pw);
+			member.setName(name);
+			member.setPhone(phone);
+			member.setAddress(address);
+			member.setAge(Integer.parseInt(age));
+			member.setSelfintro(selfintro);
+			
+			System.out.println(member);
+			//Dao 메소드 호출
+			result = userDao.registerMember(member);
+			return result;
+		}
+		@Override
+		public boolean emailCheck(HttpServletRequest request) {
+			// 파라미터 읽어오기
+			String email = request.getParameter("email");
+			//Dao의 메소드 호출
+			boolean result = userDao.emailCheck(email);
+			return result;
+				}
 	}
 

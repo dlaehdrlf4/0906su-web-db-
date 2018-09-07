@@ -8,5 +8,11 @@ public interface UserDao {
 		// 매개변수는 아이디와 비밀번호 - > 하나로 묶어서 받습니다.
 		// 처리결과는 아이디와 기타필요한 정보 -> 하나로 묶어서 리턴
 		public FMember login(FMember fmember);
+		
+		//회원가입을 처리해주는 메소드
+		public boolean registerMember (FMember member);
+		
+		//이메일 중복검사를 위한 메소드
+		public boolean emailCheck(String email);
 }
 
